@@ -28,14 +28,27 @@ class ProjectTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_view_a_project()
+    {   
+        $this->withoutExceptionHandling();
+        
+        $project = factory('App\Project')->create();
+
+        $this->get($project->path())
+                ->assertSee($project->title)->assertSee($project->description);
+    }
+
+    /** @test */
     public function a_project_requires_a_title()
     {
-        $this->post('/projects', [])->assertSessionHasErrors('title');
+        $attriubtes = factory('App\Project')->raw(['title' => '']);
+        $this->post('/projects', $attriubtes)->assertSessionHasErrors('title');
     }
 
     /** @test */
     public function a_project_requires_a_description()
     {
-        $this->post('/projects', [])->assertSessionHasErrors('description');
+        $attriubtes = factory('App\Project')->raw(['description' => '']);
+        $this->post('/projects', $attriubtes)->assertSessionHasErrors('description');
     }
 }
